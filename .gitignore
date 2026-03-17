@@ -1,0 +1,16 @@
+# Ignore node modules, environment files, build outputs, and other common files that should not be committed to version control.
+/node_modules/*
+**/node_modules
+dataset/*.json
+/.env
+/dist
+/build
+/coverage
+/.vscode
+.DS_Store
+
+# Personal documents and system files
+LinkedInSpeach.txt
+FormalThesisDefinition.docx
+AI_Investigation_Notes.txt
+
