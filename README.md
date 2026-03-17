@@ -216,7 +216,7 @@ QAIntelligenceLab
 ---
 ## Data Flow
 
-![Data Flow](images/data_flow.png "Data Flow Diagram")
+![Data Flow](../qa-intelligence-lab/images/data_flow.png "Data Flow Diagram")
 
 # Experimental Use Case
 
