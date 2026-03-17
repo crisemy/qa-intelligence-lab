@@ -1,5 +1,10 @@
 # QA Intelligence Lab
 
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.38%2B-FF4B4B)](https://streamlit.io/)
+[![Groq](https://img.shields.io/badge/Groq-Llama%203.3-orange)](https://groq.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A resilience testing and experimentation platform that combines:
 
 • QA automation
@@ -71,6 +76,8 @@ The backend service simulates unstable system behavior in a controlled and confi
 It exposes endpoints that allow runtime modification of system fault conditions.
 
 ## Health Endpoint
+
+![GET /health](../qa-intelligence-lab-Github/images/health_end_point.png "Health End Point")
 
 GET /health
 
