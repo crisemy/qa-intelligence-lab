@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QA Intelligence Lab — Architecture</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #07111f;
+      --card-bg: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --text: #e8edf5;
+      --muted: #7a8fa8;
+      --c1: #3b9eff;   /* Microservice  – blue */
+      --c2: #00d4aa;   /* Cypress       – teal */
+      --c3: #ff7140;   /* Jenkins/CI    – orange */
+      --c4: #b57bee;   /* Experiment    – purple */
+      --c5: #f5c842;   /* Data Science  – gold */
+      --c6: #ff5f7e;   /* Dashboard     – pink */
+      --flow: #00e5ff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Background grid ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59,158,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,158,255,.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .lab-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(59,158,255,.12);
+      border: 1px solid rgba(59,158,255,.3);
+      border-radius: 40px;
+      padding: 6px 18px;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--c1);
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 0%, var(--c1) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.15;
+    }
+    .subtitle {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 400;
+    }
+
+    /* ── Layer labels ── */
+    .layer-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+      margin-top: 36px;
+    }
+    .layer-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Grid layouts ── */
+    .row { display: grid; gap: 20px; }
+    .row-1 { grid-template-columns: 1fr; }
+    .row-3 { grid-template-columns: repeat(3, 1fr); }
+    .row-2 { grid-template-columns: repeat(2, 1fr); }
+
+    @media (max-width: 900px) {
+      .row-3, .row-2 { grid-template-columns: 1fr; }
+    }
+
+    /* ── Component cards ── */
+    .comp {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      backdrop-filter: blur(6px);
+      transition: transform .25s, box-shadow .25s;
+      overflow: hidden;
+    }
+    .comp::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 16px 16px 0 0;
+      background: var(--accent);
+    }
+    .comp:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.4), 0 0 0 1px var(--accent);
+    }
+    .comp-glow {
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      opacity: 0;
+      transition: opacity .3s;
+      background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 70%);
+    }
+    .comp:hover .comp-glow { opacity: 1; }
+
+    .comp-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .comp-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+      background: color-mix(in srgb, var(--accent) 18%, transparent);
+      border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    }
+    .comp-num {
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--accent);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .comp-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .comp-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* Tag chips */
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .tag {
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: color-mix(in srgb, var(--accent) 15%, transparent);
+      border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+      color: var(--accent);
+    }
+
+    /* Feature list */
+    .features { list-style: none; }
+    .features li {
+      font-size: 12.5px;
+      color: var(--muted);
+      padding: 4px 0;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .features li::before {
+      content: '▸';
+      color: var(--accent);
+      flex-shrink: 0;
+      font-size: 10px;
+      margin-top: 2px;
+    }
+
+    /* ── Connector arrows ── */
+    .connectors {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      margin: 4px 0;
+    }
+    .arrow-down {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      flex: 1;
+    }
+    .arrow-line {
+      width: 2px;
+      height: 28px;
+      background: linear-gradient(to bottom, var(--flow), transparent);
+      animation: flowDown 1.5s ease-in-out infinite;
+    }
+    @keyframes flowDown {
+      0%   { opacity: .3; }
+      50%  { opacity: 1; }
+      100% { opacity: .3; }
+    }
+    .arrow-tip {
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid var(--flow);
+    }
+    .arrow-label {
+      font-size: 10px;
+      color: var(--flow);
+      letter-spacing: .5px;
+      margin-top: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* horizontal flow */
+    .h-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 16px 0 8px;
+    }
+    .h-line {
+      height: 2px;
+      width: 60px;
+      background: linear-gradient(to right, transparent, var(--flow));
+      animation: flowRight 1.8s ease-in-out infinite;
+    }
+    @keyframes flowRight {
+      0%   { opacity: .3; }
+      50%  { opacity: 1; }
+      100% { opacity: .3; }
+    }
+    .h-tip {
+      width: 0; height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 8px solid var(--flow);
+    }
+    .h-label {
+      font-size: 10px;
+      color: var(--flow);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── Data flow summary ── */
+    .pipeline {
+      margin-top: 52px;
+      background: rgba(0,229,255,.04);
+      border: 1px solid rgba(0,229,255,.15);
+      border-radius: 16px;
+      padding: 28px 32px;
+    }
+    .pipeline h2 {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--flow);
+      margin-bottom: 20px;
+    }
+    .pipeline-steps {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .ps {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 12px;
+    }
+    .ps-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .ps-arrow { color: var(--flow); font-size: 16px; }
+
+    /* ── Tech footer ── */
+    .tech-bar {
+      margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .tech-chip {
+      padding: 6px 14px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      transition: background .2s, color .2s;
+    }
+    .tech-chip:hover { background: rgba(59,158,255,.12); color: var(--c1); }
+
+    /* author */
+    .author {
+      text-align: center;
+      margin-top: 52px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .author strong { color: var(--text); }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header>
+    <div class="lab-badge">⚗️ MSc Thesis Project</div>
+    <h1>QA Intelligence Lab</h1>
+    <p class="subtitle">Resilience Testing &amp; Experimentation Platform — System Architecture</p>
+  </header>
+
+
+  <!-- ═══════════════════════════════════════════════
+       LAYER 1 — SYSTEM UNDER TEST
+  ═══════════════════════════════════════════════ -->
+  <div class="layer-label">🔵 Layer 1 — System Under Test</div>
+  <div class="row row-1">
+    <div class="comp" style="--accent: var(--c1);">
+      <div class="comp-glow"></div>
+      <div class="comp-header">
+        <div class="comp-icon">⚙️</div>
+        <div>
+          <div class="comp-num">Component 1</div>
+          <div class="comp-title">Resilience Testing Microservice</div>
+          <div class="comp-subtitle">Node.js · Express.js · SQLite</div>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">GET /health</span>
+        <span class="tag">GET /fault</span>
+        <span class="tag">POST /fault</span>
+        <span class="tag">GET /metrics</span>
+      </div>
+      <ul class="features" style="columns: 2; gap: 24px;">
+        <li>Health &amp; DB connectivity status</li>
+        <li>Probabilistic failure injection</li>
+        <li>Artificial latency injection (ms)</li>
+        <li>Runtime error probability config</li>
+        <li>Request / error counter metrics</li>
+        <li>Average response time tracking</li>
+        <li>Middleware-based modular design</li>
+        <li>In-memory observability layer</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CONNECTOR 1 → 2+3 -->
+  <div style="display:flex; justify-content:center; margin: 6px 0;">
+    <div class="arrow-down">
+      <div class="arrow-line"></div>
+      <div class="arrow-tip"></div>
+      <div class="arrow-label">HTTP Requests / Fault Config</div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       LAYER 2 — TESTING & CI
+  ═══════════════════════════════════════════════ -->
+  <div class="layer-label">🟢 Layer 2 — Testing &amp; Continuous Integration</div>
+  <div class="row row-3">
+
+    <div class="comp" style="--accent: var(--c2);">
+      <div class="comp-glow"></div>
+      <div class="comp-header">
+        <div class="comp-icon">🌲</div>
+        <div>
+          <div class="comp-num">Component 2</div>
+          <div class="comp-title">Cypress Testing Framework</div>
+          <div class="comp-subtitle">E2E · API Resilience Tests</div>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">Cypress 15</span>
+        <span class="tag">E2E</span>
+        <span class="tag">API Tests</span>
+      </div>
+      <ul class="features">
+        <li>Health check validation</li>
+        <li>Fault injection test scenarios</li>
+        <li>Deterministic failure simulation</li>
+        <li>API behavior under instability</li>
+        <li>Experimental validation layer</li>
+      </ul>
+    </div>
+
+    <!-- horizontal arrow -->
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+      <div class="h-flow">
+        <div class="h-line"></div>
+        <div class="h-tip"></div>
+      </div>
+      <div class="h-label">triggers</div>
+    </div>
+
+    <div class="comp" style="--accent: var(--c3);">
+      <div class="comp-glow"></div>
+      <div class="comp-header">
+        <div class="comp-icon">🔧</div>
+        <div>
+          <div class="comp-num">Component 3</div>
+          <div class="comp-title">CI Pipeline</div>
+          <div class="comp-subtitle">Jenkins · Docker</div>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">Jenkins</span>
+        <span class="tag">Docker</span>
+        <span class="tag">cypress/included:15.11</span>
+      </div>
+      <ul class="features">
+        <li>Automated CI test execution</li>
+        <li>Containerised Cypress runner</li>
+        <li>host.docker.internal:3000</li>
+        <li>Simulated CD resilience pipeline</li>
+        <li>Feedback loop → microservice</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- CONNECTOR down to Experiment Engine -->
+  <div style="display:flex; justify-content:flex-start; padding-left: calc((100%/3) + 10px); margin: 6px 0;">
+    <div class="arrow-down">
+      <div class="arrow-line"></div>
+      <div class="arrow-tip"></div>
+      <div class="arrow-label">collects metrics</div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       LAYER 3 — DATA GENERATION
+  ═══════════════════════════════════════════════ -->
+  <div class="layer-label">🟣 Layer 3 — Experiment Data Generation</div>
+  <div class="row row-1">
+    <div class="comp" style="--accent: var(--c4);">
+      <div class="comp-glow"></div>
+      <div class="comp-header">
+        <div class="comp-icon">🧪</div>
+        <div>
+          <div class="comp-num">Component 4</div>
+          <div class="comp-title">Experiment Engine</div>
+          <div class="comp-subtitle">JavaScript · Node.js</div>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">experimentConfig.js</span>
+        <span class="tag">experimentRunner.js</span>
+        <span class="tag">experimentGenerator.js</span>
+        <span class="tag">→ experiments.json</span>
+      </div>
+      <ul class="features" style="columns: 2; gap: 24px;">
+        <li>Injects varied failure configurations</li>
+        <li>Executes repeated health checks</li>
+        <li>Collects runtime metrics per run</li>
+        <li>Generates structured JSON dataset</li>
+        <li>Error probability sweep</li>
+        <li>Latency sweep experiments</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CONNECTOR down to Data Science -->
+  <div style="display:flex; justify-content:center; margin: 6px 0;">
+    <div class="arrow-down">
+      <div class="arrow-line"></div>
+      <div class="arrow-tip"></div>
+      <div class="arrow-label">experiments.json dataset</div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       LAYER 4 — ANALYSIS & VISUALISATION
+  ═══════════════════════════════════════════════ -->
+  <div class="layer-label">🟡 Layer 4 — Analysis &amp; Visualisation</div>
+  <div class="row row-2">
+
+    <div class="comp" style="--accent: var(--c5);">
+      <div class="comp-glow"></div>
+      <div class="comp-header">
+        <div class="comp-icon">📊</div>
+        <div>
+          <div class="comp-num">Component 5</div>
+          <div class="comp-title">Data Science Analysis</div>
+          <div class="comp-subtitle">Python · Jupyter Notebooks</div>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">Pandas</span>
+        <span class="tag">Matplotlib</span>
+        <span class="tag">Jupyter</span>
+      </div>
+      <ul class="features">
+        <li>Error rate distribution analysis</li>
+        <li>Latency vs failure correlation</li>
+        <li>Response time statistics</li>
+        <li>Experimental dataset exploration</li>
+        <li>Future: ML anomaly detection</li>
+      </ul>
+    </div>
+
+    <div class="comp" style="--accent: var(--c6);">
+      <div class="comp-glow"></div>
+      <div class="comp-header">
+        <div class="comp-icon">📈</div>
+        <div>
+          <div class="comp-num">Component 6</div>
+          <div class="comp-title">Streamlit Dashboard</div>
+          <div class="comp-subtitle">Python · Streamlit · Groq LLM</div>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">Streamlit</span>
+        <span class="tag">Groq / Llama 3.3</span>
+        <span class="tag">Interactive</span>
+      </div>
+      <ul class="features">
+        <li>Resilience metrics overview</li>
+        <li>Interactive experiment plots</li>
+        <li>Experiment dataset exploration</li>
+        <li>AI-assisted insights (Groq LLM)</li>
+        <li>Future: predictive reliability</li>
+      </ul>
+    </div>
+
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       DATA FLOW PIPELINE SUMMARY
+  ═══════════════════════════════════════════════ -->
+  <div class="pipeline">
+    <h2>⚡ End-to-End Data Flow</h2>
+    <div class="pipeline-steps">
+      <div class="ps">
+        <div class="ps-dot" style="background:var(--c1)"></div>
+        Microservice<br/><small style="color:var(--muted)">injects faults</small>
+      </div>
+      <span class="ps-arrow">→</span>
+      <div class="ps">
+        <div class="ps-dot" style="background:var(--c2)"></div>
+        Cypress Tests<br/><small style="color:var(--muted)">validate behavior</small>
+      </div>
+      <span class="ps-arrow">→</span>
+      <div class="ps">
+        <div class="ps-dot" style="background:var(--c3)"></div>
+        Jenkins CI<br/><small style="color:var(--muted)">automates runs</small>
+      </div>
+      <span class="ps-arrow">→</span>
+      <div class="ps">
+        <div class="ps-dot" style="background:var(--c4)"></div>
+        Experiment Engine<br/><small style="color:var(--muted)">generates dataset</small>
+      </div>
+      <span class="ps-arrow">→</span>
+      <div class="ps">
+        <div class="ps-dot" style="background:var(--c5)"></div>
+        Data Analysis<br/><small style="color:var(--muted)">notebooks</small>
+      </div>
+      <span class="ps-arrow">→</span>
+      <div class="ps">
+        <div class="ps-dot" style="background:var(--c6)"></div>
+        Dashboard<br/><small style="color:var(--muted)">visualises insights</small>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- TECH STACK -->
+  <div class="tech-bar">
+    <span class="tech-chip">Node.js</span>
+    <span class="tech-chip">Express.js</span>
+    <span class="tech-chip">SQLite</span>
+    <span class="tech-chip">Cypress 15</span>
+    <span class="tech-chip">Jenkins</span>
+    <span class="tech-chip">Docker</span>
+    <span class="tech-chip">Python 3.10+</span>
+    <span class="tech-chip">Streamlit 1.38+</span>
+    <span class="tech-chip">Jupyter</span>
+    <span class="tech-chip">Groq / Llama 3.3</span>
+    <span class="tech-chip">Pandas</span>
+    <span class="tech-chip">Matplotlib</span>
+  </div>
+
+  <!-- AUTHOR -->
+  <div class="author">
+    <strong>Cristian N.</strong> &nbsp;·&nbsp; QA Engineer · MSc Candidate in Data Science &amp; AI &nbsp;·&nbsp;
+    <em>Experimental QA Engineering · Reliability Testing · AI-Assisted QA</em>
+  </div>
+
+</div>
+</body>
+</html>
