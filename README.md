@@ -209,14 +209,15 @@ QAIntelligenceLab
 │
 ├─ component-1-resilience-microservice
 │
-├─ component-2-cypress-tests
+├─ component-2-cypress-testing-framework
 │
 ├─ component-3-ci-pipeline
 │
 ├─ component-4-experiment-engine
 │   └─ dataset
 │
-├─ component-5-data-analysis
+├─ component-5-data-science-analysis
+│   ├─ dataset
 │   └─ notebooks
 │
 └─ component-6-dashboard
