@@ -2,11 +2,6 @@ version: "3.8"
 
 services:
 
-  app:
-    build: ./component-1-resilience-microservice
-    ports:
-      - "3000:3000"
-
   jenkins:
     build:
       context: ./component-3-ci-pipeline
