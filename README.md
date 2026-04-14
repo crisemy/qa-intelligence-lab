@@ -38,7 +38,7 @@ Together, these components simulate a complete **experimental QA + SRE + Data pl
 
 ---
 
-# How to Run the System (IMPORTANT)
+# How to Run the System
 
 The system is **hybrid**:
 ```bash
@@ -281,7 +281,6 @@ If exceeded:
 ```bash
 thresholds have been crossed
 ```
-
 ---
 
 ## Intelligence Lab Architecture
@@ -321,7 +320,6 @@ Future extensions may include:
 * Dataset generation for reliability modeling
 * Machine learning experiments for anomaly detection
 * Predictive modeling of system instability
-
 
 # Author
 
