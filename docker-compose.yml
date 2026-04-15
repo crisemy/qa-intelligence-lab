@@ -32,7 +32,7 @@ services:
       - "5432:5432"
     volumes:
       - qa_lab_data:/var/lib/postgresql/data
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./component-8-data-platform/db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   jenkins_home:
