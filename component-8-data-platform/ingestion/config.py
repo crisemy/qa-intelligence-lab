@@ -1,6 +1,5 @@
-# DB Config params
 DB_CONFIG = {
-    "host": "localhost",
+    "host": "host.docker.internal",
     "port": 5432,
     "database": "qa_lab",
     "user": "qa_user",

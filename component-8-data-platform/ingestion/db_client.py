@@ -1,5 +1,10 @@
-import psycopg2
-from config import DB_CONFIG
+import pg8000
 
 def get_connection():
-    return psycopg2.connect(**DB_CONFIG)
+    return pg8000.connect(
+        host="localhost",
+        port=5432,
+        database="qa_lab",
+        user="qa_user",
+        password="qa_pass"
+    )
