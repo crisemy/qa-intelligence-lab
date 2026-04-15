@@ -102,7 +102,7 @@ def insert(data, test_type="load", error_probability=0.5, latency_ms=3000):
 
 
 if __name__ == "__main__":
-    file_path = "../../component-7-load-testing/results/load-test.ndjson"
+    file_path = "/scripts/component-7-load-testing/results/load-test.json"
 
     data = parse_k6(file_path)
 
