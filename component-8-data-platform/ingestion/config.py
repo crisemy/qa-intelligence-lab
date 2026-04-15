@@ -1,5 +1,5 @@
 DB_CONFIG = {
-    "host": "host.docker.internal",
+    "host": "postgres",
     "port": 5432,
     "database": "qa_lab",
     "user": "qa_user",
