@@ -2,12 +2,18 @@
 /node_modules/*
 **/node_modules
 dataset/*.json
+__pycache__/
 /.env
 /dist
 /build
 /coverage
 /.vscode
 .DS_Store
+
+# Virtual environment
+.venv/
+venv/
+env/
 
 # Personal documents and system files
 LinkedInSpeach.txt

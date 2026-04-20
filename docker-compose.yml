@@ -2,11 +2,6 @@ version: "3.8"
 
 services:
 
-  app:
-    build: ./component-1-resilience-microservice
-    ports:
-      - "3000:3000"
-
   jenkins:
     build:
       context: ./component-3-ci-pipeline
@@ -22,8 +17,30 @@ services:
   k6:
     image: grafana/k6
     volumes:
-      - ./component-7-load-testing:/scripts
+      - ./:/scripts
     working_dir: /scripts
+
+  postgres:
+    image: postgres:15
+    container_name: qa-lab-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: qa_user
+      POSTGRES_PASSWORD: qa_pass
+      POSTGRES_DB: qa_lab
+    ports:
+      - "5432:5432"
+    volumes:
+      - qa_lab_data:/var/lib/postgresql/data
+      - ./component-8-data-platform/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+  ingestion:
+    build: ./component-8-data-platform/ingestion
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/scripts
+    working_dir: /scripts/component-8-data-platform/ingestion
 
 volumes:
   jenkins_home:
+  qa_lab_data:
