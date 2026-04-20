@@ -102,6 +102,7 @@ Technologies used:
 * Jenkins
 * Docker
 * k6
+* Streamlit
 
 Architecture principles:
 
@@ -121,12 +122,12 @@ The backend service simulates unstable system behavior in a controlled and confi
 It exposes endpoints that allow runtime modification of system fault conditions.
 
 ## Health Endpoint
+```bash
+curl http://localhost:3000/health
+{"status":"UP","database":"CONNECTED","timestamp":"2026-04-20T18:24:00.474Z"}
 
-![GET /health](./images/health_end_point.png "Health End Point")
-
-GET /health
-
-Returns the system status and database connectivity information.
+GET /health # Returns the system status and database connectivity information.
+```
 
 ---
 
@@ -315,7 +316,7 @@ This component ensures that all test data is stored and processed efficiently fo
 
 ---
 
-## Component 9: ML Layer
+## Component 9  — ML Layer
 
 ### Overview
 The ML Layer introduces machine learning capabilities to the observability pipeline. It includes:
