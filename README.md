@@ -33,6 +33,8 @@ The project is composed of three experimental components:
 5. **Data Analysis**
 6. **Streamlit Dashboard**
 7. **Performance Testing with k6**
+8. **Component 9: ML Layer**
+9. **Component 8: Data Platform**
 
 Together, these components simulate a complete **experimental QA + SRE + Data platform**.
 
@@ -283,6 +285,72 @@ thresholds have been crossed
 ```
 ---
 
+## Component 8 — Data Platform
+
+The Data Platform component is responsible for managing and processing data generated during resilience and load testing. It includes:
+
+### Features
+- **Database Initialization**: Scripts to set up the database schema and seed data.
+- **Data Ingestion**: Python scripts to parse and ingest k6 results into the database.
+- **Data Analysis**: Tools to analyze and visualize test results.
+
+### Key Files
+- `db/init.sql`: Initializes the database schema.
+- `db/schema.sql`: Defines the database structure.
+- `ingestion/config.py`: Configuration for data ingestion.
+- `ingestion/db_client.py`: Database client for interacting with the database.
+- `ingestion/parse_k6_results.py`: Parses k6 results and inserts them into the database.
+
+### Usage
+1. Initialize the database:
+   ```bash
+   python ingestion/db_client.py --init
+   ```
+2. Parse and ingest k6 results:
+   ```bash
+   python ingestion/parse_k6_results.py --file results/load-test.json
+   ```
+
+This component ensures that all test data is stored and processed efficiently for further analysis.
+
+---
+
+## Component 9: ML Layer
+
+### Overview
+The ML Layer introduces machine learning capabilities to the observability pipeline. It includes:
+- Feature engineering from k6 metrics.
+- Dataset aggregation over multiple runs.
+- A baseline ML model for classification or regression.
+- A failure prediction system.
+- An automated training pipeline.
+
+### New Scripts
+- `feature_engineering.py`: Extracts features from k6 metrics.
+- `dataset_aggregation.py`: Aggregates datasets from multiple load test runs.
+- `baseline_model.py`: Trains a baseline ML model.
+- `failure_prediction.py`: Predicts failures using the trained model.
+- `training_pipeline.py`: Automates the ML training pipeline.
+- `streamlit_app.py`: A Streamlit app to visualize classification reports.
+
+### Installation
+To set up the environment, install the required Python packages:
+```bash
+pip install pandas scikit-learn
+```
+
+### Usage
+1. Run the training pipeline:
+   ```bash
+   python training_pipeline.py
+   ```
+2. Launch the Streamlit app to view results:
+   ```bash
+   streamlit run component-9-ML-layer/streamlit_app.py
+   ```
+
+---
+
 ## Intelligence Lab Architecture
 ```bash
 QAIntelligenceLab
@@ -294,6 +362,8 @@ QAIntelligenceLab
 ├─ component-5-data-science-analysis
 ├─ component-6-dashboard
 ├─ component-7-load-testing
+├─ component-8-data-platform
+├─ component-9-ML-layer
 ```
 ---
 ## Data Flow
