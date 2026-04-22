@@ -1,3 +1,4 @@
+![Texto alternativo](./images/github_header.png)
 # QA Intelligence Lab
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
